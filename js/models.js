@@ -83,7 +83,7 @@ class StoryList {
 
     const story = new Story(response.data.story);
     this.stories.unshift(story);
-    user.ownstories.unshift(story);
+    user.ownStories.unshift(story);
 
     return story;
   }
@@ -224,21 +224,31 @@ class User {
     await this._addOrRemoveFavorite("add", story)
   }
 
+/** Remove a story to the list of user favorites and update the API
+   * - story: the Story instance to remove from favorites
+   */
+
   async removeFavorite(story) {
     this.favorites = this.favorites.filter(s => s.storyId !== story.storyId);
-    await this._addOrRemoveFavorite("remove", story)
+    await this._addOrRemoveFavorite("remove", story);
   }
+
+    /** Update API with favorite/not-favorite.
+   *   - newState: "add" or "remove"
+   *   - story: Story instance to make favorite / not favorite
+   * */
 
   async _addOrRemoveFavorite(newState, story) {
     const method = newState === "add" ? "POST" : "DELETE";
     const token = this.loginToken;
     await axios({
-      url: `${BASE_URL}/user/${this.username}/favorites/${story.storyId}`,
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
       method: method,
       data: { token },
     });
   }
+
   isFavorite(story) {
     return this.favorites.some(s => (s.storyId === story.storyId));
-  }
+    }
   }

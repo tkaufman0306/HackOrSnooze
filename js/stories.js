@@ -28,7 +28,7 @@ function generateStoryMarkup(story, showDeleteBtn = false) {
   return $(`
       <li id="${story.storyId}">
       ${showDeleteBtn ? getDeleteButtonHTML() : ""}
-      ${showStar ? getStarHTML(story, currrentUser) : ""}
+      ${showStar ? getStarHTML(story, currentUser) : ""}
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -119,7 +119,7 @@ function putUserStoriesOnPage() {
 
   $ownStories.empty();
 
-  if (currentUser.$ownStories.length === 0) {
+  if (currentUser.ownStories.length === 0) {
     $ownStories.append("<h5>No stories added by user yet!</h5>");
   } else {
     // loop through users stories and generate HTML for each story
@@ -156,13 +156,13 @@ async function toggleStoryFavorite(evt) {
   const $tgt = $(evt.target);
   const $closestLi = $tgt.closest("li");
   const storyId = $closestLi.attr("id");
-  const story = storyList.stories.find(s => s.storyID === storyId);
+  const story = storyList.stories.find(s => s.storyId === storyId);
   
-  // see if item is alreadi favorited (check for star)
+  // see if item is already favorited (check for star)
   if ($tgt.hasClass("fas")) {
     // currently a favorite: remove from user's fav list and change star
     await currentUser.removeFavorite(story);
-    $tgt.closest("li").toggleClass("fas far");
+    $tgt.closest("i").toggleClass("fas far");
   } else {
     // currently not a favorite: do the opposite
     await currentUser.addFavorite(story);
